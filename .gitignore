@@ -42,4 +42,17 @@ next-env.d.ts
 
 # anchor build artifacts
 /anchor/.anchor/
-/anchor/target/
+# Use a wildcard (*) to ignore the contents, not the directory itself
+/anchor/target/*
+
+# 1. Un-ignore the specific subdirectories so Git is allowed to enter them
+!/anchor/target/idl/
+!/anchor/target/types/
+
+# 2. (Optional but good practice) Ignore everything inside those subdirectories
+/anchor/target/idl/*
+/anchor/target/types/*
+
+# 3. Whitelist the generated IDL and TypeScript types
+!/anchor/target/idl/journal_dapp.json
+!/anchor/target/types/journal_dapp.ts

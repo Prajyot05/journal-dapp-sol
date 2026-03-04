@@ -1,12 +1,12 @@
 [package]
-name = "vault"
+name = "journal_dapp"
 version = "0.1.0"
-description = "A simple SOL vault program"
+description = "A simple SOL CRUD contract"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "vault"
+name = "journal_dapp"
 
 [features]
 default = []
@@ -15,6 +15,10 @@ no-entrypoint = []
 no-idl = []
 no-log-ix-name = []
 idl-build = ["anchor-lang/idl-build"]
+# To get rid of the warnings
+custom-heap = []
+custom-panic = []
+anchor-debug = []
 
 [dependencies]
 anchor-lang = "0.32.1"

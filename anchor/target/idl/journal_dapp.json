@@ -1,0 +1,187 @@
+{
+  "address": "4HRxGm7uKwqbDXz7Ywt8FeGtx7GovKMqUGQpEBtiWapc",
+  "metadata": {
+    "name": "journal_dapp",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "A simple SOL CRUD contract"
+  },
+  "instructions": [
+    {
+      "name": "create_journal_entry",
+      "discriminator": [
+        48,
+        65,
+        201,
+        186,
+        25,
+        41,
+        127,
+        0
+      ],
+      "accounts": [
+        {
+          "name": "journal_entry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "title"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "content",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "delete_journal_entry",
+      "discriminator": [
+        156,
+        50,
+        93,
+        5,
+        157,
+        97,
+        188,
+        114
+      ],
+      "accounts": [
+        {
+          "name": "journal_entry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "journal_entry.title",
+                "account": "JournalEntryState"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "update_journal_entry",
+      "discriminator": [
+        113,
+        164,
+        49,
+        62,
+        43,
+        83,
+        194,
+        172
+      ],
+      "accounts": [
+        {
+          "name": "journal_entry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "journal_entry.title",
+                "account": "JournalEntryState"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "content",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "JournalEntryState",
+      "discriminator": [
+        113,
+        86,
+        110,
+        124,
+        140,
+        14,
+        58,
+        66
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "JournalEntryState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ]
+}

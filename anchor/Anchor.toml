@@ -1,11 +1,12 @@
 [toolchain]
+anchor_version = "0.32.1"
 
 [features]
 resolution = true
 skip-lint = false
 
 [programs.devnet]
-vault = "9mWFZU1goNjvpEg9t4yNjxEmzVBt4rCYMYbnPCucYc2s"
+journal_dapp = "4HRxGm7uKwqbDXz7Ywt8FeGtx7GovKMqUGQpEBtiWapc"
 
 [registry]
 url = "https://api.apr.dev"
