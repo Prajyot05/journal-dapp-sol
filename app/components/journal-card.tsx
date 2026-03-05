@@ -246,6 +246,23 @@ export function JournalCard() {
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
+  /**
+   * Returns true when `err` is a wallet rejection / user cancellation.
+   * These are real failures where no transaction was sent.
+   * All other errors (WebSocket timeout, block-height expiry, network hiccup)
+   * mean the transaction may have already landed on-chain.
+   */
+  function isUserRejection(err: unknown): boolean {
+    const msg =
+      err instanceof Error ? err.message.toLowerCase() : String(err).toLowerCase();
+    return (
+      msg.includes("rejected") ||
+      msg.includes("cancelled") ||
+      msg.includes("canceled") ||
+      msg.includes("user denied")
+    );
+  }
+
   function resetForm() {
     setTitle("");
     setContent("");
@@ -288,10 +305,21 @@ export function JournalCard() {
       await new Promise((r) => setTimeout(r, 1500));
       await fetchEntries();
     } catch (err) {
-      notify(
-        "error",
-        `Create failed: ${err instanceof Error ? err.message : "Unknown error"}`
-      );
+      if (isUserRejection(err)) {
+        notify("error", "Transaction cancelled by wallet.");
+      } else {
+        // The transaction may have landed on-chain even though confirmation
+        // tracking failed (e.g. WebSocket dropped on the hosting platform).
+        // Reset the form and refresh — if it worked, the entry will appear.
+        console.error("Create confirmation error (tx may have succeeded):", err);
+        notify(
+          "info",
+          "Transaction sent — confirming status, please wait…"
+        );
+        resetForm();
+        await new Promise((r) => setTimeout(r, 2500));
+        await fetchEntries();
+      }
     }
   }, [walletAddress, title, content, send, fetchEntries]);
 
@@ -319,10 +347,15 @@ export function JournalCard() {
       await new Promise((r) => setTimeout(r, 1500));
       await fetchEntries();
     } catch (err) {
-      notify(
-        "error",
-        `Update failed: ${err instanceof Error ? err.message : "Unknown error"}`
-      );
+      if (isUserRejection(err)) {
+        notify("error", "Transaction cancelled by wallet.");
+      } else {
+        console.error("Update confirmation error (tx may have succeeded):", err);
+        notify("info", "Transaction sent — confirming status, please wait…");
+        resetForm();
+        await new Promise((r) => setTimeout(r, 2500));
+        await fetchEntries();
+      }
     }
   }, [walletAddress, editingEntry, content, send, fetchEntries]);
 
@@ -356,10 +389,14 @@ export function JournalCard() {
         await new Promise((r) => setTimeout(r, 1500));
         await fetchEntries();
       } catch (err) {
-        notify(
-          "error",
-          `Delete failed: ${err instanceof Error ? err.message : "Unknown error"}`
-        );
+        if (isUserRejection(err)) {
+          notify("error", "Transaction cancelled by wallet.");
+        } else {
+          console.error("Delete confirmation error (tx may have succeeded):", err);
+          notify("info", "Transaction sent — confirming status, please wait…");
+          await new Promise((r) => setTimeout(r, 2500));
+          await fetchEntries();
+        }
       }
     },
     [walletAddress, send, fetchEntries]
