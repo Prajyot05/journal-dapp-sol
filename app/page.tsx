@@ -111,6 +111,9 @@ export default function Home() {
 
         {/* ── Footer ───────────────────────────────────────────────────────── */}
         <footer className="flex flex-wrap gap-4 border-t border-border-low pt-6 text-xs text-muted">
+          <p>
+            Built by <a href="https://projo.dev/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">Prajyot Tayde</a>
+          </p>
           <a
             href={`https://explorer.solana.com/address/4HRxGm7uKwqbDXz7Ywt8FeGtx7GovKMqUGQpEBtiWapc?cluster=devnet`}
             target="_blank"
